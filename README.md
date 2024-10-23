@@ -7,17 +7,17 @@ will create each node in the path as required to create the full chain
 
 `CREATE fruits` Creates a directory node named 'fruits' as a child of the top-level node
 
-`CREATE fruits/citrus/orange` Creates a directory node named fruits, with a childe node named 'citrus', which has a child node named 'orange'
+`CREATE fruits/citrus/orange` Creates a directory named 'fruits', with a child node named 'citrus', which has a child node named 'orange'
 
 MOVE: Accepts two strings corresponding to the source path of the node to move, and the destination
-path to move it to.  If the source path does not describe an existing node, the routine will exit. Otherwise,
-the routine will create the specified node hierarchy and move the LAST node from the source node path to the specified
+path to move it to.  If the source path does not identify an existing node, the routine will exit. Otherwise,
+the routine will create the specified destination node hierarchy and move the LAST node from the source node path to the 
 destination.  
 
-`MOVE fruits food` Moves the 'fruits' directory - if it exists - to a child of the 'food' directory, and deletes 'fruits' as a child of the top-level directory.
+`MOVE fruits food` Moves the 'fruits' directory - if it exists - to the 'food' directory, and deletes 'fruits' as a child of the top-level directory.
 Creates the 'food' directory if it does not exist.
 
-`MOVE fruits/apple foods/fruit` Move the 'apple' directory - if it exists - to be a child of 'foods/fruit' (creating any of foods or fruit as required)
+`MOVE fruits/apple foods/fruit` Move the 'apple' directory - if it exists - to be a child of 'foods/fruit' - creating either of foods or fruit as required -
 and deletes 'apple' from the 'fruits' directory
 
 DELETE: Accepts a string argument.  If the string is delimited by '/', the routine will ONLY delete
