@@ -35,7 +35,7 @@ internal class Program
         
         var currentAction = string.Empty;
         
-        //MessagePrompt(string.Empty);
+        MessagePrompt("Begin... enter 'quit' to exit");
         currentAction = Console.ReadLine();
 
         while (currentAction?.ToUpper() != "QUIT")
