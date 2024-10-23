@@ -1,11 +1,7 @@
-﻿using System.Dynamic;
-
-namespace App;
+﻿namespace App;
 
 public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null)
 {
-    public readonly Guid Id = Guid.NewGuid();
-
     private readonly List<DirectoryNode> _children = children ?? [];
 
     public List<DirectoryNode> Children
@@ -16,35 +12,31 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
     public string Name { get; } = nodeName;
     public DirectoryNode? Parent { get; private set; }
 
-    public DirectoryNode? CreateChildNode(DirectoryNode? directoryNode, DirectoryNode? parent = null)
+    public DirectoryNode? CreateChildNode(DirectoryNode newChildNode, DirectoryNode? parent = null)
     {
         try
         {
-            if (Children != null && Children.Any(c => c.Name == directoryNode?.Name)) return null;
-            if (directoryNode != null)
-            {
-                directoryNode.Parent = parent ?? this;
-                _children?.Add(directoryNode);
-                return directoryNode;
-            }
+            if (Children.Any(c => c.Name == newChildNode.Name)) return null;
+            
+                newChildNode.Parent = parent ?? this;
+                _children.Add(newChildNode);
+                return newChildNode;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-
-        return null;
     }
 
-    public DirectoryNode? CreateChildNodeByNodePath(string nodeName)
+    public DirectoryNode? CreateChildNodeByNodePath(string directoryPath)
     {
         var currentNode = this;
-        var segments = nodeName.Split('/');
+        var segments = directoryPath.Split('/');
 
         foreach (var segment in segments)
         {
-            var childFound = currentNode?.Children?.FirstOrDefault(c => c.Name == segment);
+            var childFound = currentNode?.Children.FirstOrDefault(c => c.Name == segment);
             
             if (childFound == null)
             {
@@ -73,7 +65,7 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
 
         foreach (var segment in nodePathSegments)
         {
-            foundChildNode = currentNode?.Children?.FirstOrDefault(c => c.Name == segment);
+            foundChildNode = currentNode.Children.FirstOrDefault(c => c.Name == segment);
 
             if (foundChildNode == null)
             {
@@ -111,12 +103,12 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
         try
         {
             var split = nodeName.Split('/');
-            // If split.Length = 1, delete child node (deletes all children)
+            
             if (split.Length == 1)
             {
                 if (_children.Any(c => c.Name == split[0]))
                 {
-                    _children?.RemoveAll(c => c.Name == split[0]);
+                    _children.RemoveAll(c => c.Name == split[0]);
                     return "The node was deleted";
                 }
                 else
@@ -129,7 +121,7 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
             if (sourceNode == null)
                 return "The node was not found.";
 
-            sourceNode?.Parent?.Delete(sourceNode.Name);
+            sourceNode.Parent?.Delete(sourceNode.Name);
             {
                 return "The node was deleted";
             }

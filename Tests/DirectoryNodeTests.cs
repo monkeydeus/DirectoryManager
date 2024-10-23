@@ -5,19 +5,6 @@ namespace Tests;
 public class DirectoryNodeTests
 {
     [Fact]
-    public void New_DocumentNode_should_be_created_with_GUID_ID()
-    {
-        //Arrange
-        var rootNode = new DirectoryNode("root");
-
-        //Act
-        var guidId = rootNode.Id;
-
-        //Assert
-        Assert.True(Guid.TryParse(rootNode.Id.ToString(), out _));
-    }
-
-    [Fact]
     public void Create_should_add_child_node_to_current_node()
     {
         //Arrange
@@ -95,7 +82,7 @@ public class DirectoryNodeTests
         var childNode = rootNode.CreateChildNode(new DirectoryNode("Child1"));
         
         //Assert
-        Assert.True(childNode.Parent == rootNode);
+        Assert.True(childNode?.Parent == rootNode);
     }
 
     [Fact]
@@ -118,7 +105,7 @@ public class DirectoryNodeTests
     {
         //Arrange
         var rootNode = new DirectoryNode("root");
-        var childNode = rootNode.CreateChildNode(new DirectoryNode("Child1"));
+        rootNode.CreateChildNode(new DirectoryNode("Child1"));
         
         //Act
         var message = rootNode.Delete("Child1");
@@ -132,7 +119,6 @@ public class DirectoryNodeTests
     {
         //Arrange
         var rootNode = new DirectoryNode("root");
-        var childNode = new DirectoryNode("Child1");
         
         //Act
         var message = rootNode.Delete("Child1");
@@ -167,7 +153,7 @@ public class DirectoryNodeTests
     {
         //Arrange
         var rootNode = new DirectoryNode("root");
-        var children = rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
+        rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
         
         //Act
         rootNode.Move("fruit/apples/fuji", "foods/fruits");
@@ -181,7 +167,7 @@ public class DirectoryNodeTests
     {
         //Arrange
         var rootNode = new DirectoryNode("root");
-        var children = rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
+        rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
         
         //Act
         rootNode.Move("fruit/apples/fuji", "foods/fruits");
