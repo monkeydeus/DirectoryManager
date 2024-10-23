@@ -1,4 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using App;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace Tests;
 
@@ -8,10 +11,11 @@ public class DirectoryNodeTests
     public void Create_should_add_child_node_to_current_node()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object, "root");
         
         //Act
-        rootNode.CreateChildNode(new DirectoryNode("Child1"), rootNode);
+        rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"), rootNode);
 
         //Assert
         Assert.True(rootNode.Children.Count == 1);
@@ -21,7 +25,8 @@ public class DirectoryNodeTests
     public void New_DocumentNode_should_be_created_with_the_provided_name()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
         
@@ -34,11 +39,12 @@ public class DirectoryNodeTests
     public void DocumentNode_should_only_have_one_child_of_given_name()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
-        rootNode.CreateChildNode(new DirectoryNode("Child1"), rootNode);
-        rootNode.CreateChildNode(new DirectoryNode("Child1"),rootNode);
+        rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"), rootNode);
+        rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"),rootNode);
         
         var childCount = rootNode.Children.Count(c => c.Name == "Child1");
         
@@ -50,7 +56,8 @@ public class DirectoryNodeTests
     public void New_DocumentNode_should_be_created_with_empty_children_list()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
         
@@ -62,7 +69,8 @@ public class DirectoryNodeTests
     public void Create_should_create_new_child_node_from_name_and_return_created_child_node()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object, "root");
         
         //Act
         var childNode = rootNode.CreateChildNodeByNodePath("Child1");
@@ -76,10 +84,11 @@ public class DirectoryNodeTests
     public void New_Child_DocumentNode_should_have_parent_node_reference()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
-        var childNode = rootNode.CreateChildNode(new DirectoryNode("Child1"));
+        var childNode = rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"));
         
         //Assert
         Assert.True(childNode?.Parent == rootNode);
@@ -89,8 +98,9 @@ public class DirectoryNodeTests
     public void Delete_should_delete_child_node_from_parent()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
-        var childNode = rootNode.CreateChildNode(new DirectoryNode("Child1"));
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
+        var childNode = rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"));
         
         //Act
         rootNode.Delete("Child1");
@@ -104,8 +114,9 @@ public class DirectoryNodeTests
     public void Delete_should_return_success_message_when_child_node_is_deleted()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
-        rootNode.CreateChildNode(new DirectoryNode("Child1"));
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
+        rootNode.CreateChildNode(new DirectoryNode(mockLogger.Object,"Child1"));
         
         //Act
         var message = rootNode.Delete("Child1");
@@ -118,7 +129,8 @@ public class DirectoryNodeTests
     public void Delete_should_return_failure_message_when_child_node_is_not_found()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
         var message = rootNode.Delete("Child1");
@@ -130,7 +142,8 @@ public class DirectoryNodeTests
     public void Create_should_create_node_hierarchy()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         
         //Act
         rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
@@ -152,7 +165,8 @@ public class DirectoryNodeTests
     public void Move_should_move_node_from_source_to_destination()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
         
         //Act
@@ -166,7 +180,8 @@ public class DirectoryNodeTests
     public void Move_should_remove_node_from_source()
     {
         //Arrange
-        var rootNode = new DirectoryNode("root");
+        var mockLogger = new Mock<ILogger<DirectoryNode>>();
+        var rootNode = new DirectoryNode(mockLogger.Object,"root");
         rootNode.CreateChildNodeByNodePath("fruit/apples/fuji");
         
         //Act

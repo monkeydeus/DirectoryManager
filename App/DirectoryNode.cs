@@ -1,6 +1,7 @@
-﻿namespace App;
+﻿using Microsoft.Extensions.Logging;
+namespace App;
 
-public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null)
+public class DirectoryNode(ILogger<DirectoryNode> logger, string nodeName, List<DirectoryNode>? children = null)
 {
     private readonly List<DirectoryNode> _children = children ?? [];
 
@@ -24,7 +25,7 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e, $"Error occured while creating new child node {newChildNode.Name}");
             throw;
         }
     }
@@ -42,11 +43,11 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
             {
                 try
                 {
-                    currentNode = currentNode?.CreateChildNode(new DirectoryNode(segment), currentNode);
+                    currentNode = currentNode?.CreateChildNode(new DirectoryNode(logger, segment), currentNode);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    logger.LogError(e, $"Error creating child node for {segment}");
                     throw;
                 }
             }
@@ -93,7 +94,7 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e, $"Error moving node from {source} to {destination}");
             throw;
         }
     }
@@ -128,7 +129,7 @@ public class DirectoryNode(string nodeName, List<DirectoryNode>? children = null
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e, $"Error deleting node from {nodeName}");
             throw;
         }
     }

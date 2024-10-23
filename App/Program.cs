@@ -1,10 +1,38 @@
-﻿namespace App;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-internal static class Program
+namespace App;
+
+internal class Program
 {
     static void Main()
     {
-        var rootNode = new DirectoryNode("root");
+        using var serviceProvider = LoggingConfig.ConfigureLogging();
+        
+        ILogger<Program> logger;
+        try
+        {
+            logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while getting the logger service: {ex.Message}");
+            return;
+        }
+
+        DirectoryNode rootNode;
+        try
+        {
+            var dirLogger = serviceProvider.GetRequiredService<ILogger<DirectoryNode>>();
+            rootNode = new DirectoryNode(dirLogger, "root");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
         var currentAction = string.Empty;
         
         DefaultPrompt(string.Empty);
@@ -25,26 +53,39 @@ internal static class Program
             {
                 case "CREATE":
                     if (commandArgs.Length == 1)
+                    {
+                        logger.LogInformation("Creating directory");
                         rootNode.CreateChildNodeByNodePath(commandArgs[0]);
+                    }
                     else
-                        DefaultPrompt("PLease enter only one argument for the directory name or path for the Create command");
+                        DefaultPrompt("Please enter only one argument for the directory name or path for the Create command");
                     break;
                 case "LIST":
+                {
+                    logger.LogInformation("Listing directories");
                     rootNode.Children.ForEach(c => List(c));
-                    break;
+                    break;   
+                }
                 case "MOVE":
                     if (commandArgs.Length == 2)
+                    {
+                        logger.LogInformation("Moving directory");
                         rootNode.Move(commandArgs[0], commandArgs[1]);
+                    }
                     else
                         DefaultPrompt("Please enter exactly one source directory and one destination directory for the Move command");
                     break;
                 case "DELETE":
                     if (commandArgs.Length == 1)
+                    {
+                        logger.LogInformation("Deleting directory");
                         rootNode.Delete(commandArgs[0]);
+                    }
                     else
                         DefaultPrompt("Please enter exactly one argument for the directory name or path for the Delete command");
                     break;
                 default:
+                    logger.LogInformation("Unknown command");
                     DefaultPrompt("You selected an unknown action");
                     break;
             }
