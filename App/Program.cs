@@ -35,7 +35,7 @@ internal class Program
         
         var currentAction = string.Empty;
         
-        DefaultPrompt(string.Empty);
+        //MessagePrompt(string.Empty);
         currentAction = Console.ReadLine();
 
         while (currentAction?.ToUpper() != "QUIT")
@@ -56,14 +56,17 @@ internal class Program
                     {
                         logger.LogInformation("Creating directory");
                         rootNode.CreateChildNodeByNodePath(commandArgs[0]);
+                        Console.WriteLine($"CREATE {commandArgs[0]}");
                     }
                     else
-                        DefaultPrompt("Please enter only one argument for the directory name or path for the Create command");
+                        MessagePrompt("Please enter only one argument for the directory name or path for the Create command");
                     break;
                 case "LIST":
                 {
                     logger.LogInformation("Listing directories");
+                    Console.WriteLine("LIST:");
                     rootNode.Children.ForEach(c => List(c));
+                    Console.WriteLine();
                     break;   
                 }
                 case "MOVE":
@@ -71,26 +74,27 @@ internal class Program
                     {
                         logger.LogInformation("Moving directory");
                         rootNode.Move(commandArgs[0], commandArgs[1]);
+                        Console.WriteLine($"MOVE {commandArgs[0]} {commandArgs[1]}");
                     }
                     else
-                        DefaultPrompt("Please enter exactly one source directory and one destination directory for the Move command");
+                        MessagePrompt("Please enter exactly one source directory and one destination directory for the Move command");
                     break;
                 case "DELETE":
                     if (commandArgs.Length == 1)
                     {
                         logger.LogInformation("Deleting directory");
                         rootNode.Delete(commandArgs[0]);
+                        Console.WriteLine($"DELETE {commandArgs[0]}");
                     }
                     else
-                        DefaultPrompt("Please enter exactly one argument for the directory name or path for the Delete command");
+                        MessagePrompt("Please enter exactly one argument for the directory name or path for the Delete command");
                     break;
                 default:
                     logger.LogInformation("Unknown command");
-                    DefaultPrompt("You selected an unknown action");
+                    MessagePrompt("You selected an unknown action");
                     break;
             }
 
-            DefaultPrompt();
             currentAction = Console.ReadLine();
         }
 
@@ -103,7 +107,7 @@ internal class Program
         node.Children.ForEach(c => List(c, string.Concat("  ", prefix)));
     }
 
-    static void DefaultPrompt(string message = "")
+    static void MessagePrompt(string message = "")
     {
         if (!string.IsNullOrEmpty(message))
             Console.WriteLine($"{message}.");
