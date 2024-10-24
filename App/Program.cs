@@ -35,7 +35,7 @@ internal class Program
         
         var currentAction = string.Empty;
         
-        MessagePrompt("Begin... enter 'quit' to exit");
+        Console.WriteLine("Begin... enter 'quit' to exit");
         currentAction = Console.ReadLine();
 
         while (currentAction?.ToUpper() != "QUIT")
@@ -59,7 +59,7 @@ internal class Program
                         Console.WriteLine($"CREATE {commandArgs[0]}");
                     }
                     else
-                        MessagePrompt("Please enter only one argument for the directory name or path for the Create command");
+                        Console.WriteLine("Please enter only one argument for the directory name or path for the Create command");
                     break;
                 case "LIST":
                 {
@@ -77,7 +77,7 @@ internal class Program
                         Console.WriteLine($"MOVE {commandArgs[0]} {commandArgs[1]}");
                     }
                     else
-                        MessagePrompt("Please enter exactly one source directory and one destination directory for the Move command");
+                        Console.WriteLine("Please enter exactly one source directory and one destination directory for the Move command");
                     break;
                 case "DELETE":
                     if (commandArgs.Length == 1)
@@ -87,11 +87,11 @@ internal class Program
                         Console.WriteLine($"DELETE {commandArgs[0]}");
                     }
                     else
-                        MessagePrompt("Please enter exactly one argument for the directory name or path for the Delete command");
+                        Console.WriteLine("Please enter exactly one argument for the directory name or path for the Delete command");
                     break;
                 default:
                     logger.LogInformation("Unknown command");
-                    MessagePrompt("You selected an unknown action");
+                    Console.WriteLine("You selected an unknown action");
                     break;
             }
 
@@ -105,17 +105,5 @@ internal class Program
     {
         Console.WriteLine($"{prefix}{node.Name}");
         node.Children.ForEach(c => List(c, string.Concat("  ", prefix)));
-    }
-
-    static void MessagePrompt(string message = "")
-    {
-        if (!string.IsNullOrEmpty(message))
-            Console.WriteLine($"{message}.");
-        else
-        {
-            var nextMessage =
-                "What would you like to do next? Please select from 'CREATE', 'LIST', 'MOVE', 'DELETE'.  Enter 'quit' to exit.";
-            Console.WriteLine(nextMessage);
-        }
     }
 }
