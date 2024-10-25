@@ -37,6 +37,9 @@ public class DirectoryNode(ILogger<DirectoryNode> logger, string nodeName, List<
 
         foreach (var segment in segments)
         {
+            if(string.IsNullOrEmpty(segment))
+                return null;
+                
             var childFound = currentNode?.Children.FirstOrDefault(c => c.Name == segment);
             
             if (childFound == null)
